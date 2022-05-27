@@ -11,10 +11,10 @@ M5 Restore v1.0
 
 IMEI Restore Utility for the Netgear Nighthawk M5 and M6 Hotspot Routers
 
-The goal for this project was to make it simple for anyone to restore / change
-the IMEI on the Netgear Nighthawk M1.
+The goal for this project was to make it simple for anyone to restore / change 
+the IMEI on the Netgear Nighthawk M5 or M6.
 
-I wrote it in python and have supplied the source and a complied version
+I wrote it in Python and have supplied the source and a complied version
 for those that can't, or simply don't want to set up a python environment.
 
 WARNING: I take no responsibility for what you do with this utility.
