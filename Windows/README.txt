@@ -39,12 +39,11 @@ the reset button for 10 seconds. The device should restore to factory settings.
 3) After the device reboots in to factory default mode, it should connect via
 tether to your computer. You may see your default browser try to load MSN. This
 is typically what happens when the device is in USB Tether mode. If the
-device doesn't enter tether, login to 192.168.1.1 via a web browser. The default
-login is Admin / attwifi. Configure the device in the settings menu to tether
-via usb.
+device doesn't enter tether, login to 192.168.1.1 via a web browser. Configure the 
+device in the settings menu to tether via USB.
 
 4) After your PC is tethered to the device, you should be able to run the
-m1restore.exe utility. Make sure you enter the correct IMEI number.
+m5restore.exe utility. Make sure you enter the correct IMEI number.
 
 If you receive an error, you either didn't fully factory reset your device or
 your device isn't in usb tether mode.
