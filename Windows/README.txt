@@ -9,7 +9,7 @@ This is a fork of the M1 Restore utility modified to support the M5 and M6 serie
 
 M5 Restore v1.0
 
-MEI Restore Utility for the Netgear Nighthawk M5 and M6 Hotspot Routers
+IMEI Restore Utility for the Netgear Nighthawk M5 and M6 Hotspot Routers
 
 The goal for this project was to make it simple for anyone to restore / change
 the IMEI on the Netgear Nighthawk M1.
