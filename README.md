@@ -1,4 +1,4 @@
-This is a fork of the M1 Restore utility modified to support the M5 and M6 series.
+*This is a fork of the M1 Restore utility modified to support the M5 and M6 series.
 
 M5 Restore v1.0
 
