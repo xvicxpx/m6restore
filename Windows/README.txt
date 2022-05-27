@@ -1,11 +1,15 @@
- __  __ _   ___        _               
-|  \/  / | | _ \___ __| |_ ___ _ _ ___ 
-| |\/| | | |   / -_|_-<  _/ _ \ '_/ -_)
-|_|  |_|_| |_|_\___/__/\__\___/_| \___| 1.0
+___  ___ ___________          _                 
+|  \/  ||  ___| ___ \        | |                
+| .  . ||___ \| |_/ /___  ___| |_ ___  _ __ ___ 
+| |\/| |    \ \    // _ \/ __| __/ _ \| '__/ _ \
+| |  | |/\__/ / |\ \  __/\__ \ || (_) | | |  __/
+\_|  |_/\____/\_| \_\___||___/\__\___/|_|  \___| 1.0
                                         
-M1 Restore v1.0 - by sodium (MOB)
+This is a fork of the M1 Restore utility modified to support the M5 and M6 series.
 
-IMEI Restore Utility for the Netgear Nighthawk M1 Hotspot Router
+M5 Restore v1.0
+
+MEI Restore Utility for the Netgear Nighthawk M5 and M6 Hotspot Routers
 
 The goal for this project was to make it simple for anyone to restore / change
 the IMEI on the Netgear Nighthawk M1.
@@ -17,18 +21,18 @@ WARNING: I take no responsibility for what you do with this utility.
 
 Usage:
 
-m1restore.exe <new 15 digit imei>
-Example: m1restore.exe 013364005176495
+m5restore.exe <new 15 digit imei>
+Example: m5restore.exe 013364005176495
 
 This is a command line based program. You should run it from the command line
 on your Windows pc.
 
 Step By Step Guide (FOLLOW THESE STEPS CAREFULLY!)
 -----------------------------------------------------------------------------
-1) Turn off the M1. Take out the battery and the sim card. It's important
+1) Turn off the M5. Take out the battery and the sim card. It's important
 that you leave the sim and battery out for the duration of this process.
 
-2) Plug the M1 in to your computer via the USB cable. The device should power
+2) Plug the M5 in to your computer via the USB cable. The device should power
 up and indicate that a sim card is missing. Take a paper clip and hold down
 the reset button for 10 seconds. The device should restore to factory settings.
 
@@ -49,7 +53,5 @@ your device isn't in usb tether mode.
 the web interface to verify your IMEI was sucessfully updated. At this point
 you can power down the device, put a sim card and the battery back in.
 -----------------------------------------------------------------------------
-Shouts: MOB, HCH, tophat, techn0_logic, jouser, kf.
+Shoutouts: MOB, HCH, tophat, techn0_logic, jouser, kf.
 B.Kerler for the sierrakeygen code.
-
-What? You thought we retired?
