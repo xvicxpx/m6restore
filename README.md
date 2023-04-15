@@ -62,7 +62,7 @@ Should see:
 M6 Restore
 
 ```bash
-python [m5restore.py](http://m5restore.py/) <IMEI Number Here>
+python m5restore.py <IMEI Number Here>
 ```
 
 <aside>
