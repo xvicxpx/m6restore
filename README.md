@@ -1,64 +1,195 @@
-*This is a fork of the M1 Restore utility modified to support the M5 and M6 series.
+# Nighthawk M6 Tutorial
 
-M6 Restore v1.0
 
-IMEI Restore Utility for the Netgear Nighthawk M5 and M6 Hotspot Routers
+<aside>
+📄 This is a fork of the M5 Restore utility modified to support the M6 series.
 
-The goal for this project was to make it simple for anyone to restore / change
-the IMEI on the Netgear Nighthawk M5 or M6.
+</aside>
 
-WARNING: I take no responsibility for what you do with this utility.
+<aside>
+❗ WARNING: I take no responsibility for what you do with this utility.
 
-Usage:
+</aside>
 
-MacOS:
-If you don't already have it install Homebrew
+Clone repository
+
+```bash
+git clone https://github.com/developer-of-things/m6restore
+```
+
+Get an IMEI number available 
+
+> Have an IMEI that you know is not / won’t be used already
+IMEI should be of a 5G device that is supported on the carrier you are using
+> 
+
+Install homebrew at brew.sh
+
+```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
 
 Install Telnet & nmap
-brew install telnet nmap
 
+```bash
+brew install telnet nmap
+```
+
+```bash
 python3 -m venv myVEnv
 source myVEnv/bin/activate
 pip install -r requirements.txt
-python m5restore.py
+```
 
-Windows:
+<aside>
+💡 Remove SIM card
+Plug device into computer
 
-m5restore.exe <new 15 digit imei>
+</aside>
 
-Example: m5restore.exe 013364005176495
+```bash
+sudo nmap 192.168.1.1
+```
 
-This is a command line based program. You should run it from the command line
-on your Windows PC.
+Should see:
 
-Step By Step Guide (FOLLOW THESE STEPS CAREFULLY!)
------------------------------------------------------------------------------
-1) Turn off the M5. Take out the battery and the sim card (On M6 only remove 
-SIM Card). It's important that you leave the sim out for the 
-duration of this process.
+> PORT     STATE SERVICE
+53/tcp   open  domain
+80/tcp   open  http
+5510/tcp open  secureidprop
+> 
 
-2) Plug the M5 in to your computer via the USB cable that supports data transfer. 
-The M5 device should power up and indicate that a sim card is missing. 
-The M6 device should already be powered up because it has a battery inserted.
-It is recommended to take a paper clip and hold down the reset button for 10 
-seconds. The device should restore to factory settings.
+M6 Restore
 
-3) After the device reboots in to factory default mode, it should connect via
-tether to your computer. You may see your default browser try to load MSN. This
-is typically what happens when the device is in USB Tether mode. If the
-device doesn't enter tether, login to 192.168.1.1 via a web browser. Configure 
-the device in the settings menu to tether via USB.
+```bash
+python [m5restore.py](http://m5restore.py/) <IMEI Number Here>
+```
 
-4) After your PC is tethered to the device, you should be able to run the
-m5restore.exe utility. Make sure you enter the correct IMEI number.
+<aside>
+💡 Device will restart, wait for restart to go on to next steps
 
-If you receive an error, you either didn't fully factory reset your device or
-your device isn't in USB tether mode.
+</aside>
 
-5) The device will boot after IMEI restore has completed. You can login to
-the web interface to verify your IMEI was sucessfully updated. At this point
-you can power down the device, put a sim card and the battery back in.
------------------------------------------------------------------------------
-Shoutouts: MOB, HCH, tophat, techn0_logic, jouser, kf.
+Should see:
+
+> PORT     STATE SERVICE
+23/tcp open telnet
+53/tcp   open  domain
+80/tcp   open  http
+5510/tcp open  secureidprop
+> 
+
+Telnet connect to device
+
+```bash
+telnet 192.168.1.1 23
+```
+
+Create script file
+
+```bash
+touch /usr/sbin/set-ttl.sh
+chmod +x /usr/sbin/set-ttl.sh
+vi /usr/sbin/set-ttl.sh
+```
+
+Add contents of script
+
+```bash
+#!/bin/bash
+#!/usr/bin/env bash
+
+iptables -t mangle -I POSTROUTING -j TTL --ttl-set 64
+iptables -t mangle -I PREROUTING -j TTL --ttl-set 64
+```
+
+Create service 
+
+/etc/systemd/system
+
+```bash
+[Unit]
+Description=Set TTL in mangle iptables
+After=multi-user.target
+
+[Service]
+ExecStart=/usr/sbin/set-ttl.sh
+Type=simple
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Enable script
+
+> setenforce 0  \\ sets mode to permissive
+setenforce 1 \\ sets mode to enforcing
+getenforce \\ displays mode
+
+Setting permissive mode is temporary and is only needed to make changes to processes.  It can be switched back after changes are made or will be set back once device reboots
+
+start will start the service
+enable will create sim link in /etc/systemd/system and will be called on boot
+> 
+
+```bash
+setenforce 0
+
+systemctl daemon-reload
+
+systemctl start set-ttl
+
+systemctl status set-ttl
+
+systemctl enable set-ttl
+
+systemctl list-unit-files | grep ttl
+```
+
+Validate that service is running
+
+> Validate that service is running
+> 
+
+```bash
+iptables -t mangle -L POSTROUTING
+iptables -t mangle -L PREROUTING
+```
+
+Configure APN
+
+```bash
+vi ./mnt/userrw/ntgnv/apns.xml
+```
+
+Example APN:
+
+<aside>
+💡 This APN will be specific to your SIM card and which APN it is meant to work with.  Generally you will change your APN by adding ‘dun’ to APN type
+
+</aside>
+
+```bash
+<apn pid="apn-1" carrier="ATT NR Broadband" mcc="310" mnc="280" apn="nrbroadband" type="default,supl,dun,mms,fota" protocol="IPV4V6" mvno_type="gid" mvno_match_data="S" />
+<apn pid="apn-2" carrier="ATT Enhancedphone" mcc="310" mnc="280" apn="enhancedphone" type="default,supl,dun,mms,fota" protocol="IPV4V6" />
+```
+
+reboot 
+
+<aside>
+💡 You can now insert your SIM card & select your APN in the admin panel
+Now the IMEI, APN, and TTL service are setup and running
+All data will be considered phone data and not hotspot
+
+</aside>
+
+<aside>
+⚠️ If Device updates you will need to do this process again
+
+</aside>
+
+<aside>
+📣 Shoutouts: MOB, HCH, tophat, techn0_logic, jouser, kf.
 B.Kerler for the sierrakeygen code.
+
+</aside>
