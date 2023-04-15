@@ -66,6 +66,18 @@ encryptimeiwrite = "AT!NVENCRYPTIMEI=" + encryptimei + "\r\n"
 tn.write(encryptimeiwrite.encode('ascii'))
 time.sleep(10)
 
+# print("Issuing AT!TELNET=1")
+# tn.write(b"AT!TELNET=1\r\n")
+# time.sleep(10)
+
+# print("Issuing AT!CUSTOM=\"RDENABLE\",1")
+# tn.write(b"AT!CUSTOM=\"RDENABLE\",1\r\n")
+# time.sleep(10)
+
+# print("Issuing AT!CUSTOM=\"TELNETENABLE\",1")
+# tn.write(b"AT!CUSTOM=\"TELNETENABLE\",1\r\n")
+# time.sleep(10)
+
 #reset router
 print("IMEI Restored. Rebooting Router")
 tn.write(b"AT!RESET\r\n")
