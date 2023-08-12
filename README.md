@@ -62,7 +62,7 @@ Should see:
 M6 Restore
 
 ```bash
-python m5restore.py <IMEI Number Here>
+python m6restore.py <IMEI Number Here>
 ```
 
 <aside>
@@ -166,7 +166,7 @@ Example APN:
 
 <aside>
 💡 This APN will be specific to your SIM card and which APN it is meant to work with.  Generally you will change your APN by adding ‘dun’ to APN type
-
+   I have added an example apns.xml file in this repository for some common carriers
 </aside>
 
 ```bash
