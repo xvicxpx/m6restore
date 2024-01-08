@@ -1,0 +1,10 @@
+[Unit]
+Description=Set TTL in mangle iptables
+After=multi-user.target
+
+[Service]
+ExecStart=/usr/sbin/set-ttl.sh
+Type=simple
+
+[Install]
+WantedBy=multi-user.target

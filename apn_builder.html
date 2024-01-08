@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>APN Builder</title>
+    <style>
+        body {
+            background-color: #212121;
+            /* Black */
+            color: #FFFFFF;
+            /* White */
+            font-family: 'Roboto', sans-serif;
+        }
+
+        form {
+            width: 300px;
+            margin: 0 auto;
+        }
+
+        label,
+        input {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #424242;
+            /* Dark Grey */
+            color: #FFFFFF;
+            /* White */
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #2196F3;
+            /* Blue */
+            color: #FFFFFF;
+            /* White */
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #64B5F6;
+            /* Light Blue */
+        }
+
+        #xmlOutput {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #424242;
+            /* Dark Grey */
+            color: #FFFFFF;
+            /* White */
+            white-space: pre-wrap;
+            /* Preformatted text */
+        }
+    </style>
+</head>
+
+<body>
+    <div style="display: flex; justify-content: space-between;">
+        <form id="apnForm">
+            <label for="carrier">Carrier (Required):</label><br>
+            <input type="text" id="carrier" name="carrier"><br>
+            <label for="mcc">MCC (Required):</label><br>
+            <input type="text" id="mcc" name="mcc"><br>
+            <label for="mnc">MNC (Required):</label><br>
+            <input type="text" id="mnc" name="mnc"><br>
+            <label for="apn">APN (Required):</label><br>
+            <input type="text" id="apn" name="apn"><br>
+            <label for="type">Type (Required):</label><br>
+            <input type="text" id="type" name="type"><br>
+            <label for="protocol">Protocol (Required):</label><br>
+            <input type="text" id="protocol" name="protocol"><br>
+            <label for="user">User:</label><br>
+            <input type="text" id="user" name="user"><br>
+            <label for="password">Password:</label><br>
+            <input type="text" id="password" name="password"><br>
+            <label for="authtype">Auth Type:</label><br>
+            <input type="text" id="authtype" name="authtype"><br>
+            <label for="mvno_type">MVNO Type:</label><br>
+            <input type="text" id="mvno_type" name="mvno_type"><br>
+            <label for="mvno_match_data">MVNO Match Data:</label><br>
+            <input type="text" id="mvno_match_data" name="mvno_match_data"><br>
+            <input type="submit" value="Submit">
+        </form>
+
+        <div style="display: flex; flex-direction: column;">
+            <iframe width="auto" height="40%" src="https://www.youtube.com/embed/sEm7VhFARQo?si=NLvWdGInBnGjHxkx"
+                title="YouTube video player" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+            <a href="https://www.youtube.com/watch?v=sEm7VhFARQo" target="_blank">Link to YouTube Video</a>
+            <div
+                style="margin-top: 20px; padding: 10px; border-radius: 4px; background-color: #424242; color: #FFFFFF;">
+                <p>Note: </br>The contents of the APNs box should be copied into the apns.xml file after inserting SIM
+                    card.</p>
+                <p>This can usually be done by using</p>
+                <p>1) Connect to your router over telnet <br> - telnet your-router-ip-address 23 (often telnet
+                    192.168.1.1 23)</p>
+                <p>2) Edit your apns.xml with <br> - vi ./mnt/userrw/ntgnv/apns.xml</p>
+                <p>3) Back out of any existing entries and paste in new APNs from above</p>
+                <p>4) Save changes in vi editor using ESC key followed by :wq</p>
+                <p>- if mistakes are made you can cancel editing with ESC key followed by :q!</p>
+                <p>It is recommended to backup your apns.xml file before making edits but I also have a copy of mine in
+                    the project</p>
+            </div>
+        </div>
+    </div>
+
+    <pre id="xmlOutput"></pre>
+
+
+    <script>
+        var xmlArray = []; // Initialize an empty array to store XML data
+
+        document.getElementById('apnForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            var xml = '<apn pid="' + "apn-" + (xmlArray.length + 1) + '"';
+            if (this.carrier.value) xml += ' carrier="' + this.carrier.value + '"';
+            if (this.mcc.value) xml += ' mcc="' + this.mcc.value + '"';
+            if (this.mnc.value) xml += ' mnc="' + this.mnc.value + '"';
+            if (this.apn.value) xml += ' apn="' + this.apn.value + '"';
+            if (this.type.value) xml += ' type="' + this.type.value + '"';
+            if (this.protocol.value) xml += ' protocol="' + this.protocol.value + '"';
+            if (this.user.value) xml += ' user="' + this.user.value + '"';
+            if (this.password.value) xml += ' password="' + this.password.value + '"';
+            if (this.authtype.value) xml += ' authtype="' + this.authtype.value + '"';
+            if (this.mvno_type.value) xml += ' mvno_type="' + this.mvno_type.value + '"';
+            if (this.mvno_match_data.value) xml += ' mvno_match_data="' + this.mvno_match_data.value + '"';
+            xml += '/>';
+            xmlArray.push(xml); // Add the XML data to the array
+
+            // Render the XML data from the array
+            document.getElementById('xmlOutput').textContent = xmlArray.join('\n');
+        });
+    </script>
+</body>
+
+</html>
