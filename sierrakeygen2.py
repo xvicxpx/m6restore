@@ -132,33 +132,54 @@ keytable = bytearray([0xF0, 0x14, 0x55, 0x0D, 0x5E, 0xDA, 0x92, 0xB3, 0xA7, 0x6C
                       # 24 NTG9X15A Openlock Key, NTG9X15A_01.08.02.00
                       ])
 
+'''
+The selected code is part of a Python script named sierrakeygen2.py which is used to generate keys for Sierra Wireless devices. The script contains a class SierraGenerator that has several methods to perform the key generation process. Here's a brief overview of the main functionalities:
+
+1. __init__: This method initializes the SierraGenerator object, setting up two byte arrays tbl and rtbl.
+
+2. run: This method is the main entry point for generating a key. It takes as input the device generation, a challenge, and a type. It first checks if the device generation is supported, then it retrieves the appropriate key based on the type (lockkey, mepkey, or cndkey), and finally it generates a response using the SierraKeygen method.
+
+3. SierraKeygen: This method initializes the key generation process and then executes the appropriate algorithm for the device generation. The algorithm is specified in the prodtable dictionary and is executed using the exec function.
+
+4. SierraInit, SierraPreInit, SierraFinish, SierraAlgo, sierra_calc8F: These methods are part of the key generation process. They perform various operations on the byte arrays tbl and rtbl based on the input key and challenge.
+
+5. selftest: This method tests the key generation process with a set of predefined test cases. It checks if the generated key matches the expected response for each test case.
+'''
+
 
 class SierraGenerator():
+    # Initialize two bytearrays
     tbl = bytearray()
     rtbl = bytearray()
 
     def __init__(self):
+        # Fill rtbl and tbl with zeros
         for i in range(0, 0x14):
             self.rtbl.append(0x0)
         for i in range(0, 0x100):
             self.tbl.append(0x0)
 
     def run(self, devicegeneration, challenge, type):
+        # Convert challenge from hex to bytes
         challenge = bytearray(unhexlify(challenge))
 
         self.devicegeneration = devicegeneration
+        # Check if devicegeneration is supported
         if not devicegeneration in prodtable:
             print("Sorry, " + devicegeneration + " not supported.")
             exit(0)
 
+        # Get the ids and length from the prodtable
         mepid = prodtable[devicegeneration]["openmep"]
         cndid = prodtable[devicegeneration]["opencnd"]
         lockid = prodtable[devicegeneration]["openlock"]
         clen = prodtable[devicegeneration]["clen"]
+        # If challenge length is less than clen, pad it with zeros
         if len(challenge) < clen:
             challenge=[0 for i in range(0, clen - len(challenge))]
 
         challengelen = len(challenge)
+        # Determine the idf based on the type
         if type == 0:  # lockkey
             idf = lockid
         elif type == 1:  # mepkey
@@ -166,12 +187,16 @@ class SierraGenerator():
         elif type == 2:  # cndkey
             idf = cndid
 
+        # Get the key from the keytable
         key = keytable[idf * 16:(idf * 16) + 16]
+        # Generate the response
         resp = self.SierraKeygen(challenge=challenge, key=key, challengelen=challengelen, keylen=16)[:challengelen]
+        # Convert the response to hex and uppercase
         resp = hexlify(resp).decode('utf-8').upper()
         return resp
 
     def selftest(self):
+        # Test table with challenge, devicegeneration, and expected response
         test_table=[
             {"challenge": "8101A18AB3C3E66A", "devicegeneration": "MDM9x15", "response": "D1E128FCA8A963ED"},
             {"challenge": "BE96CBBEE0829BCA", "devicegeneration": "MDM9x40", "response": "1033773720F6EE66"},
@@ -188,18 +213,21 @@ class SierraGenerator():
             {"challenge": "20E253156762DACE", "devicegeneration": "SDX55", "response": "03940D7067145323"},
             {"challenge": "2387885E7D290FEE", "devicegeneration": "MDM9x15A", "response": "DC3E51897BAA9C1E"},
         ]
+        # Run the test for each entry in the test table
         for test in test_table:
             challenge = test["challenge"]
             devicegeneration = test["devicegeneration"]
             response = test["response"]
             openlock = self.run(devicegeneration, challenge, 0)
             padding = " " * (16 - len(devicegeneration))
+            # Print the result of the test
             if openlock != response:
                 print(devicegeneration+padding+" FAILED!")
             else:
                 print(devicegeneration+padding+" PASSED :)")
 
     def SierraPreInit(self, counter, key, keylen, challengelen, mcount):
+        # Pre-initialization for the SierraInit function
         if counter != 0:
             tmp2 = 0
             i = 1
@@ -222,6 +250,7 @@ class SierraGenerator():
         return [counter, challengelen, mcount]
 
     def SierraInit(self, key, keylen):
+        # Initialize the tbl and rtbl arrays
         if keylen == 0 or keylen > 0x20:
             retval = [0, keylen]
         elif 1 <= keylen <= 0x20:
@@ -235,6 +264,7 @@ class SierraGenerator():
                 self.tbl[i] = self.tbl[(t & 0xff)]
                 i = i - 1
                 self.tbl[(t & 0xFF)] = m
+            # Initialize the rtbl array based on the devicegeneration
             self.rtbl[0] = self.tbl[prodtable[self.devicegeneration]["init"][0]] if \
                 prodtable[self.devicegeneration]["init"][0] != 0 else self.tbl[(cl & 0xFF)]
             self.rtbl[1] = self.tbl[prodtable[self.devicegeneration]["init"][1]] if \
@@ -249,7 +279,7 @@ class SierraGenerator():
         return retval
 
     def sierra_calc8F(self, challenge, a=0, b=1, c=2, d=3, e=4, ret=0, ret2=2):
-        # MDM9200
+        # Calculation for MDM9200
         self.rtbl[b] = (self.rtbl[b] + self.tbl[(self.rtbl[d] & 0xFF)]) & 0xFF
         uVar2 = self.rtbl[c] & 0xFF
         bVar1 = self.tbl[uVar2]
@@ -269,6 +299,7 @@ class SierraGenerator():
         return self.rtbl[ret2] & 0xFF  # a
 
     def SierraAlgo(self, challenge, a=0, b=1, c=2, d=3, e=4, ret=3, ret2=1, flag=1):  # M9x15
+        # Algorithm for M9x15
         v6 = self.rtbl[e]
         v0 = (v6 + 1) & 0xFF
         self.rtbl[e] = v0
@@ -291,6 +322,7 @@ class SierraGenerator():
         return self.rtbl[ret] & 0xFF
 
     def SierraFinish(self):
+        # Reset the tbl and rtbl arrays
         self.tbl = [0 for _ in range(0, 0x100)]
         self.rtbl[0] = 0
         self.rtbl[1] = 0
@@ -300,6 +332,7 @@ class SierraGenerator():
         return 1
 
     def SierraKeygen(self, challenge:bytearray, key: bytearray, challengelen:int, keylen:int):
+        # Generate a key based on the challenge
         challenge = challenge
         resultbuffer=bytearray([0 for i in range(0, 0x100 + 1)])
         ret, keylen = self.SierraInit(key, keylen)
@@ -311,24 +344,32 @@ class SierraGenerator():
 
 
 class connection:
+    # Initialize the connection class
     def __init__(self, port=""):
         self.serial = None
         self.tn = None
         self.connected = False
+        # If no port is specified, try to detect it
         if port == "":
             port = self.detect(port)
+            # If no port is detected, try to connect via Telnet
             if port == "":
                 self.tn = Telnet("192.168.1.1", 5510)
                 self.connected = True
+        # If a port is specified or detected, try to connect via serial
         if port != "":
             self.serial = serial.Serial(port=port, baudrate=115200, bytesize=8, parity='N', stopbits=1, timeout=1)
             self.connected = self.serial.is_open
 
+    # Detect the port of the device
     def detect(self, port):
         if port == "":
+            # Iterate over all available ports
             for port in serial.tools.list_ports.comports():
+                # Check if the port belongs to a Sierra Wireless or Netgear device
                 if port.vid == 0x1199:
                     portid = port.location[-1:]
+                    # Check if the port ID is 3
                     if int(portid) == 3:
                         print("Detected Sierra Wireless device at: " + port.device)
                         return port.device
@@ -340,6 +381,7 @@ class connection:
 
         return ""
 
+    # Read the reply from the device
     def readreply(self):
         info = []
         if self.serial is not None:
@@ -352,6 +394,7 @@ class connection:
                 info.append(tmp)
         return info
 
+    # Send a command to the device
     def send(self, cmd):
         if self.tn is not None:
             self.tn.write(bytes(cmd + "\r", 'utf-8'))
@@ -369,6 +412,7 @@ class connection:
             time.sleep(0.05)
             return self.readreply()
 
+    # Close the connection
     def close(self):
         if self.tn is not None:
             self.tn.close()
@@ -480,3 +524,4 @@ def main(args):
 
 if __name__ == '__main__':
     main(sys.argv)
+
