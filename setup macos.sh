@@ -21,7 +21,7 @@ fi
 brew update
 
 # Install nmap and telnet
-if test ! $(which brew); then
+if test ! $(which nmap); then
     echo "Installing nmap..."
     brew install nmap 
 else
