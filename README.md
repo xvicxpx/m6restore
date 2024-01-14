@@ -11,6 +11,17 @@
 
 </aside>
 
+<aside>
+📢 Now there is an automated script for MacOS! Check it out in the repository.
+
+
+[🍏 MacOS Automated Script Instructions](docs/macos%20script.md)
+
+🪟 Windows Automated Powershell Script ...most development completed in develop branch, open to pull requests / contributions to complete development.  I might not return to Windows script for a while.  
+
+</aside>
+
+
 Clone repository
 
 ```bash

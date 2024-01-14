@@ -88,7 +88,7 @@ while [ -z "$imei" ]; do
   fi
 done
 
-python m6restore.py $imei
+python m6restore.py $imei $ip_address
 
 reboot_confirm=""
 while [ "$reboot_confirm" != "y" ] && [ "$reboot_confirm" != "yes" ]; do
@@ -127,7 +127,8 @@ setupTtlService(){
 
 (sleep 6; setupTtlService)&
 
-expect scripts/tn_script.exp
+expect scripts/tn_script.exp $ip_address
+
 
 echo "Setup APN using instructions in YouTube Video and apn_builder.html"
 echo "Disconnect Nighthawk to watch video or have connected to establish telnet connection for APN edits"
