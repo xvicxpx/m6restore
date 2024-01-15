@@ -59,7 +59,7 @@ done
 # Perform an arp scan and grep for "mywebui.net" to retrieve the IP address
 ip_address=""
 while [ -z "$ip_address" ]; do
-    arp_scan_output=$(arp -a | grep "mywebui.net")
+    arp_scan_output=$(arp -a | grep -E "mywebui.net|attwifimanager")
     ip_address=$(echo $arp_scan_output | awk '{print $2}' | sed 's/[()]//g')
     if [ -n "$ip_address" ]; then
         echo "IP address retrieved: $ip_address"
