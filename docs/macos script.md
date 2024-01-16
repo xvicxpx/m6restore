@@ -6,7 +6,7 @@ git clone https://github.com/developer-of-things/m6restore
 
 Change directory to the root of the project:
 ```bash
-cd C:\Users\admin\Downloads\m6restore
+cd /Users/$USER/Downloads/m6restore
 ```
 
 Make script executable:
