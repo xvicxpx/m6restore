@@ -14,6 +14,17 @@ Make script executable:
 chmod +x setup\ macos.sh
 ```
 
+Note: You may need to edit and add your router host name to the script if it is not already there.
+With your Nighthawk connected over USB with USB tethering enabled, you should be able to see your IP addresses and host names on your network with 
+```bash
+arp -a
+```
+
+Search for this line in the setup macos.sh script and add your host name separated from other host names by a pipe |
+```bash
+grep -E "mywebui.net|attwifimanager|mobileap.qualcomm.com"
+```
+
 Call the script:
 ```bash
 ./setup\ macos.sh
