@@ -1,2 +1,4 @@
 luhn==0.2.0
 pyserial==3.5
+Exscript==2.6.28
+colorama==0.4.6

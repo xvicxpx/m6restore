@@ -45,7 +45,7 @@ print("Open Lock Challenge: " + challenge)
 
 #keygen openlock hash
 keygen = sierrakeygen2.SierraGenerator()
-devicegeneration = "SDX55"
+devicegeneration = "SDX65"
 resp = keygen.run(devicegeneration, challenge, 0)
 print("Key Generator Response: " + resp)
 
